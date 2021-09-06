@@ -1,13 +1,8 @@
-const Note = ( {content, date} ) => {
+const Note = ({ title, body }) => {
   return(
     <li>
-      <p>
-        {content}
-        <br/>
-        <small>
-          <time>{date}</time>
-        </small>
-      </p>
+      <p>{title}</p>
+      <small>{body}</small>
     </li>
   )
 }

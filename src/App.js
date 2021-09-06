@@ -1,12 +1,27 @@
 import Note from './Note.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 
-function App(props) {
+function App() {
 
-  const [notes, setNotes] = useState(props.notes)
+  const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+  const [loading,setLoading] = useState(false)
+
+  useEffect(() => {
+    console.log('useEffect')
+    setTimeout(() => {
+      console.log('ahora')
+      setLoading(true)
+      fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(response => response.json())
+        .then((json) => {
+          console.log('seteando las notas de la aplicacion')
+          setNotes(json)
+          setLoading(false)
+        })
+    }, 2000)
+  }, [])
 
   const handleChange = (event) => {
     setNewNote(event.target.value)
@@ -16,31 +31,20 @@ function App(props) {
     event.preventDefault()
     const noteToAddToState = {
       id: notes.length + 1,
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < 0.5
+      title: newNote,
+      body: newNote
     }
     setNotes(prevNotes => prevNotes.concat(noteToAddToState))
     setNewNote('')
-  }
-  
-  const handleShowAll = () => {
-    setShowAll(() => !showAll)
   }
 
   return (
     <div>
       <h1>Notes</h1>
-      <button onClick={handleShowAll}>{showAll ? 'Show all important' : 'Show all'}</button>
       <ol className="App">
         {
           notes
-          .filter((note) => {
-            if (showAll === true)
-            return true
-            return note.important === true
-          })
-          .map(note => <Note key={note.id} content={note.content} date={note.date} />)
+          .map(note => <Note key={note.id} title={note.title} body={note.body} />)
         }
       </ol>
       <form onSubmit={handleSubmit}>
