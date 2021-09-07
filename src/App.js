@@ -26,12 +26,16 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    axios.post('https://jsonplaceholder.typicode.com/posts')
+
+    console.log('crear nota')
     const noteToAddToState = {
-      id: notes.length + 1,
       title: newNote,
-      body: newNote
+      body: newNote,
+      userId: 1
     }
+
+    axios.post('https://jsonplaceholder.typicode.com/posts', noteToAddToState)
+
     setNotes(prevNotes => prevNotes.concat(noteToAddToState))
     setNewNote('')
   }
